@@ -22,6 +22,7 @@ function botReceiverVerify(event) {
 async function botReceiverHandler(event) {
     // 1. 获取加密数据
     let encrypt;
+    // 使用 Base64.decode 对原始信息解码
     xml2js.parseString(Base64.decode(event.body), function (err, result) {
         encrypt = result.xml.Encrypt[0];
     });
