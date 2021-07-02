@@ -5,6 +5,7 @@
 const axios = require('axios');
 const wecomCrypto = require('@wecom/crypto');
 const xml2js = require('xml2js');
+const Base64 = require('js-base64');
 
 // 验证服务
 function botReceiverVerify(event) {
@@ -21,7 +22,7 @@ function botReceiverVerify(event) {
 async function botReceiverHandler(event) {
     // 1. 获取加密数据
     let encrypt;
-    xml2js.parseString(event.body, function (err, result) {
+    xml2js.parseString(Base64.decode(event.body), function (err, result) {
         encrypt = result.xml.Encrypt[0];
     });
     // 2. TODO 对msg_signature进行校验
@@ -49,11 +50,6 @@ exports.main = async (event) => {
     if (event.httpMethod === 'GET') {
         return botReceiverVerify(event)
     } else {
-        try {
-            return await botReceiverHandler(event);
-        } catch (e) {
-            console.log(e);
-            return { ret: false }
-        }
+        return await botReceiverHandler(event);
     }
 }
